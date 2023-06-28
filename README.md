@@ -16,9 +16,8 @@ with difficult access.
 - [Node.js](https://nodejs.org/) - Server Side
 - [Express.js](https://expressjs.com/) for routing
 - [MongoDB](https://www.cloud.mongodb.com/) for database
-- [Heroku](https://www.heroku.com/) for deployment and hosting
-- [Docker](https://docs.docker.com/)
-- [Redis](https://www.heroku.com/) for deployment and hosting
+- [Render](https://dashboard.render.com/) for deployment and hosting
+
 
 ### How to run locally
 

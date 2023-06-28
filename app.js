@@ -3,19 +3,16 @@ require('dotenv').config();
 const express = require('express');
 logger = require('morgan');
 const app = express();
-const userRoute = require('./routes/user');
-const adminRoute = require('./routes/admin');
+const indexRoute = require('./routes/index');
 const cors = require("cors");
-const redis = require('redis');
-const redisClient = redis.createClient();
-const session = require('express-session');
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 
-app.use(session({
-  store: new (require('connect-redis')(session))({ client: redisClient }),
-  secret: process.env.KEY
-  resave: false,
-  saveUninitialized: false,
-}));
+
+// Multer config
+app.use(
+  upload.single("photo")
+);
 
 //middleware
 app.use(logger('dev'));
@@ -25,8 +22,8 @@ app.use(cors());
 
 
 // //api routes
-app.use('/v1', userRoute);
-app.use('/v2', adminRoute);
+app.use('/v1', indexRoute);
+
 
 
 app.get("/", (req, res) => {
