@@ -1,27 +1,26 @@
 const mongoose = require('mongoose');
-const usersSchema = new mongoose.Schema({
-    fullname: {
+const medicationSchema = new mongoose.Schema({
+    droneId: {
+        type: mongoose.Types.ObjectId,
+        ref: "drone",
+        required: true,
+      },
+    name: {
         type: String,
         required: true,
     },
-    email: {
+    weight: {
         type: String,
         reqired: true,
     },
-    password: {
+    code: {
         type: String,
         required: true,
     },
-    role: {
+    photo: {
         type: String,
-        enum: ["admin", "user"],
         required: true,
     },
-    status: {
-        type: String,
-        enum : ['Completed','Pending'],
-        default: 'Completed'
-    }
 }, { timestamps: true });
 
-module.exports = mongoose.model('users', usersSchema);
+module.exports = mongoose.model('medication', medicationSchema);

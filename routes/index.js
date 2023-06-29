@@ -1,7 +1,7 @@
 const express = require('express');
 router = express.Router();
 const { body } = require("express-validator");
-const { adminRegister, adminLogin } = require("../controllers/admin.controller");
+const { registerDrone} = require("../controllers/index");
 
 
 // route for authentication

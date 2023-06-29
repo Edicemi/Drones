@@ -1,41 +1,46 @@
-const User = require("../models/user.model");
+const Drone = require('../models/drones');
 const Error = require('../lib/customError');
 const { validationResult, body } = require("express-validator");
-const { passwordHash, passwordCompare } = require('../lib/bcrypt');
-const {jwtSign}  = require('../lib/ath');
 
-const adminRegister = async(req, res) => {
-    const { fullname, email, password, role } = req.body;
+const registerDrone = async(req, res, next) => {
+    const { number, model, weight, battery, state } = req.body;
     try {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            throw Error("Error request, check input again.", result, 401)
+            throw new Error("Error request, check input again.", result, 401)
         }
-        if (fullname && email && password && role) {
-            let userExist = await User.findOne({ email: email })
-            if (userExist) {
-                throw Error(`Email ${email} already exist, try another one.`, 400)
+        if (number && model && weight && battery && state) {
+            let droneExist = await Drone.findOne({ number: number })
+            if (droneExist) {
+                throw Error(`Drone ${number} already exist, register a new one.`, 400)
             }
-            const hashedPassword = await passwordHash(password)
-            const user = new User({
-                fullname: fullname,
-                email: email,
-                password: hashedPassword,
-                role,
+
+            if (weight > 500) {
+                throw new Error(
+                    ` Weight is higher than maximum limit` 400,
+                );
+            }
+
+            const drone = new Drone({
+                number: number,
+                model: model,
+                weight: weight,
+                battery: battery,
+                state: state,
             })
-            await user.save();
+            await drone.save();
 
             let payload = {
-                user_id: user._id,
-                fullname: user.fullname,
-                email: user.email,
-                role: user.role,
+                drone_id: drone._id,
+                number: drone.number,
+                model: drone.model,
+                weight: drone.weight,
+                batter: drone.batter,
+                state: drone.state,
             }
-            const token = jwtSign(payload)
             return res.status(200).json({
-                message: 'User account created successfully',
+                message: 'Drone registered successfully',
                 data: payload,
-                token,
             })
         } else {
             throw Error('Invalid parameters provided', 'MISSING ARGUMENTS', 419)

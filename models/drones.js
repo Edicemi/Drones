@@ -1,28 +1,27 @@
 const mongoose = require('mongoose');
-const adminSchema = new mongoose.Schema({
-    fullname: {
+const droneSchema = new mongoose.Schema({
+    number: {
         type: String,
         required: true,
     },
-    email: {
+    model: {
         type: String,
-        reqired: true,
-    },
-    password: {
+        enum : ['(Lightweight,','Middleweight,', 'Cruiserweight,', 'Heavyweight'],
+    }
+    weight: {
         type: String,
         required: true,
     },
-    role: {
+    battery: {
         type: String,
-        enum: ["admin", "user"],
         required: true,
     },
-    status: {
+    state: {
         type: String,
-        enum : ['Completed','Pending'],
-        default: 'Completed'
+        enum : ['(idle,','loading,', 'delivering,', 'delivered', 'returning'],
+        default: 'idle'
     }
    
 }, { timestamps: true });
 
-module.exports = mongoose.model('drones', adminSchema);
+module.exports = mongoose.model('drone', droneSchema);
