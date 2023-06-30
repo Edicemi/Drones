@@ -7,7 +7,7 @@ const droneSchema = new mongoose.Schema({
     model: {
         type: String,
         enum : ['(Lightweight,','Middleweight,', 'Cruiserweight,', 'Heavyweight'],
-    }
+    },
     weight: {
         type: String,
         required: true,

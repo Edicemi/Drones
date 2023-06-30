@@ -22,7 +22,7 @@ const registerDrone = async(req, res, next) => {
 
             if (weight > 500) {
                 throw new Error(
-                    ` Weight is higher than maximum limit` 400,
+                    ` ]Weight ${weight} is higher than maximum limit`, 400,
                 );
             }
 
@@ -67,14 +67,14 @@ const addMedication = async (req, res, next) => {
   
       if (weight > 500) {
         throw new Error(
-            ` Weight is too high for the drone` 400,
+            ` Weight is too high for the drone`,400,
         );
     }
       const medication = new Medication({
         droneId: droneId,
         name: name,
         weight: weight,
-        code: code
+        code: code,
         photo: result.res,
       });
 
