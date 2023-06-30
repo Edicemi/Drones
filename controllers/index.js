@@ -1,6 +1,11 @@
 const Drone = require('../models/drones');
+const Medication = require('../models/medications');
 const Error = require('../lib/customError');
 const { validationResult, body } = require("express-validator");
+const { uploadCloudinary } = require("../utils/cloudinary");
+const path = require('path');
+const DatauriParser = require("datauri/parser");
+const parser = new DatauriParser();
 
 const registerDrone = async(req, res, next) => {
     const { number, model, weight, battery, state } = req.body;
@@ -43,43 +48,91 @@ const registerDrone = async(req, res, next) => {
                 data: payload,
             })
         } else {
-            throw Error('Invalid parameters provided', 'MISSING ARGUMENTS', 419)
+            throw new Error('Invalid parameters provided', 'MISSING ARGUMENTS', 419)
         }
     } catch (error) {
         next(error);
     }
 }
 
-const adminLogin = async(req, res) => {
-    const { email, password } = req.body;
+const addMedication = async (req, res, next) => {
     try {
-        const user = await User.findOne({ email: email });
-        if (user) {
-            const doMatch = await passwordCompare(password, user.password);
-            console.log(user)
-            if (doMatch) {
-                let payload = {
-                    user_id: user._id,
-                    fullname: user.fullname,
-                    email: user.email,
-                    role: user.role,
-                };
-                const token = jwtSign(payload);
-                return res.status(200).json({
-                    message: 'User logged in successfully',
-                    data: payload,
-                    token,
-                });
-            } else {
-                throw Error('Invalid email or password',
-                    410);
-            }
-        } else {
-            throw Error('Invalid email or password', 410);
-        }
+      const { name, weight, code, photo} = req.body;
+      const {droneId} = req.params
+      const {state} = req.body
+      // console.log(req.file);
+      const extName = path.extname(req.file.originalname).toString();
+      const file64 = parser.format(extName, req.file.buffer);
+      const result = await uploadCloudinary(file64.content);
+  
+      if (weight > 500) {
+        throw new Error(
+            ` Weight is too high for the drone` 400,
+        );
+    }
+      const medication = new Medication({
+        droneId: droneId,
+        name: name,
+        weight: weight,
+        code: code
+        photo: result.res,
+      });
+
+      const changeState = await Drone({
+        droneId: droneId,
+        state
+    })
+    post.drones.push(changeState);
     } catch (error) {
         next(error);
     }
 }
 
-module.exports = { Register, Login }
+const getMedications = async (req, res, next) => {
+    try {
+        const {droneId} = req.params
+      const check = await Medication.findById("droneId")
+      return res.status(200).json({
+        message: "fetched succesfully",
+        check
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+const checkingIdleDrones = async (req, res, next) => {
+    try {
+        const getIdleDrone = await Drone.find().sort({
+            state: 'idle'
+        }).select("number model weight battery")
+        return res.status(200).json({
+            message: 'fetched succesfully',
+            data: getIdleDrone,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const checkBattery = async (req, res, next) => {
+    try {
+        const { droneId } = req.params;
+        const drone = await Drone.findById({ droneId });
+        if (drone) {
+            const drones = await Account.find().select(["battery"]);
+            return res.status(200).json({
+                status: "success",
+                message: 'Battery Info fetched succesfully',
+                drones,
+            });
+        } else {
+            throw new Error('Invalid',
+                400);
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { registerDrone, addMedication, getMedications, checkingIdleDrones, checkBattery }

@@ -9,8 +9,6 @@ traditional transportation infrastructure.
 Useful drone functions include delivery of small items that are (urgently) needed in locations
 with difficult access.
 
-[Postman-Documentation]()
-
 ### Technology Used
 
 - [Node.js](https://nodejs.org/) - Server Side
@@ -26,61 +24,58 @@ npm install
 npm run dev
 ```
 
-### User Authentication API Reference
+### Drone Registration API Reference
 
-#### register
+#### register a drone
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
-    "fullname": "
-    "email": "
-    "password": "
+    "number": "
+    "model": "
+    "weight": "
+    "battery": "
+    "state": "
     }' \
-    https://
+   
 ```
 
 | Parameter  | Type     | Description                        |
 | :--------- | :------- | :--------------------------------- |
-| `fullname`     | `string` | **Required**. fullname is required     |
-| `email`    | `string` | **Required**. email is required    |
-| `password` | `string` | **Required**. password is required |
+| `number`     | `string` | **Required**. number is required     |
+| `model`    | `string` | **Required**. model is required    |
+| `weight` | `string` | **Required**. weight is required |
+| `battery`    | `string` | **Required**. battery is required    |
+| `state` | `string` | **Required**. state is required |
 
-### User Dashboard Reference
-
-#### Post a Question
+#### Add Medications
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
-  "title": "
-  "body": "
-  "tags": "
-  "user_id": "
+  "name": "
+  "weight": "
+  "code": "
+  "photo": "
+  }' \
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`    | `string` | **Required**. name is required    |
+| `weight`  | `string` | **Required**. weight is required  |
+| `code` | `string` | **Required**. code is required |
+| `photo` | `string` | **Required**. photo is required |
+
+#### Get Medications for a particular drone
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+  "droneId": "
   }' \
     https:
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `title`    | `string` | **Required**. title is required    |
-| `body`  | `string` | **Required**. body is required  |
-| `tags` | `string` | **Required**. tags is required |
-| `user_id` | `string` | **Required**. user_id is required |
+| `droneId` | `string` | **Required**. droneId is required |
 
-#### Answer a question
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{
-  "answer": "
-  "questionPostId": "
-  "user_id": "
-  }' \
-    https:
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `answer`    | `string` | **Required**. answer is required    |
-| `questionPostId` | `string` | **Required**. questionPostId is required |
-| `user_id` | `string` | **Required**. user_id is required |
-
-Copyright (c) 2022 Victoria
+Copyright (c) 2023 Victoria

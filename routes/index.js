@@ -1,18 +1,19 @@
 const express = require('express');
 router = express.Router();
 const { body } = require("express-validator");
-const { registerDrone} = require("../controllers/index");
+const { registerDrone, addMedication, getMedications, checkingIdleDrones, checkBattery} = require("../controllers/index");
 
 
 // route for authentication
-router.post('/register', body("fullname", "Name is required").trim(),
-    body("email").isEmail().normalizeEmail(),
-    body("password", "Password must be of  8 characters long and alphanumeric")
+router.post('/register', body("model", "Model is required").trim(),
+    body("number", "number must be alphanumeric")
     .trim()
-    .isLength({ min: 8 })
+    .isLength({ mzx: 100 })
     .isAlphanumeric(),
-    adminRegister);
+    registerDrone);
 
-router.post('/login',  adminLogin);
-
+router.post('/loadmedication/:droneId',  addMedication);
+router.get('/checkmedication/:droneId', getMedications);
+router.get('/checkidledrones', checkingIdleDrones);
+router.get('/checkbattery/:droneId', checkBattery);
 module.exports = router;
